@@ -16,6 +16,10 @@ function normalizeBaseUrl(value) {
 
 export const API_BASE_URL = normalizeBaseUrl(RAW_BASE_URL)
 
+// Logged once on load. The value is baked in at build time, so this is the
+// quickest way to confirm a deployed build picked up API_BASE_URL.
+console.info(`[api] base URL: ${API_BASE_URL || '(same origin)'}`)
+
 /** Builds an absolute API URL from a root-relative path such as `/api/certificate`. */
 export function apiUrl(path) {
   return `${API_BASE_URL}${path}`
