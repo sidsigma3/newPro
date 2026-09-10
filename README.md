@@ -21,7 +21,7 @@ Fill the form, then **Preview** (renders inline in an iframe) or **Download PDF*
 | `server/.env.example`    | yes       | —                           | Template. Copy to `server/.env`.                     |
 | `server/.env`            | **no**    | `npm run dev` / `npm start` | Local values. Gitignored.                            |
 | `client/.env.example`    | yes       | —                           | Template.                                            |
-| `client/.env.development`| yes       | `npm run dev` (vite)        | Empty base URL → requests go through the Vite proxy. |
+| `client/.env.development`| yes      | `npm run dev` (vite)        | Empty base URL → requests go through the Vite proxy. |
 | `client/.env.production` | yes       | `npm run build`             | The deployed backend URL.                            |
 | `client/.env.local`      | **no**    | vite, any mode              | Your personal overrides. Gitignored.                 |
 
@@ -33,12 +33,15 @@ environment variable always wins over the file, which is how hosts like Vercel i
 | `PORT`            | `4000`     | Port the API binds to. The Vite proxy expects 4000.                          |
 | `ALLOWED_ORIGINS` | *(unset)*  | Comma-separated browser origins allowed to call the API. Unset = any origin. |
 
-**Client** — Vite only exposes variables prefixed `VITE_`, and inlines them at build time, so
-changing one means rebuilding.
+**Client** — Vite only exposes *prefixed* variables to the browser bundle. `vite.config.js` sets
+`envPrefix: ['VITE_', 'API_']`, so `API_BASE_URL` works. Values are inlined at **build** time, so
+changing one requires a rebuild — and anything behind those prefixes ends up in public JS, so never
+put a secret there.
 
 | Variable             | Default | Meaning                                                                        |
 | -------------------- | ------- | ------------------------------------------------------------------------------ |
-| `VITE_API_BASE_URL`  | `''`    | Backend origin. Empty = same-origin (dev proxy / single-server build). A bare host gets `https://` added. |
+| `API_BASE_URL`       | `''`    | Backend origin. Empty = same-origin (dev proxy / single-server build). A bare host gets `https://` added. |
+| `VITE_API_BASE_URL`  | `''`    | Fallback name for the same setting, if you prefer the conventional prefix.       |
 
 ## Production
 

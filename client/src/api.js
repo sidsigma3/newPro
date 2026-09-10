@@ -1,4 +1,6 @@
-const RAW_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+// `API_` is exposed via envPrefix in vite.config.js; VITE_API_BASE_URL is kept
+// as a fallback so either name works.
+const RAW_BASE_URL = import.meta.env.API_BASE_URL ?? import.meta.env.VITE_API_BASE_URL ?? ''
 
 /**
  * Accepts a bare host (`server-xyz.vercel.app`) or a full origin
