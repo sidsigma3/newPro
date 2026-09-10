@@ -9,8 +9,19 @@ import { FIELDS, validateCertificate } from './validate.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PORT = process.env.PORT || 4000
 
+// Comma-separated list of origins allowed to call the API. Unset means "any
+// origin", which is fine locally and for a public, unauthenticated endpoint.
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/+$/, ''))
+  .filter(Boolean)
+
 const app = express()
-app.use(cors())
+app.use(
+  cors({
+    origin: ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS : '*',
+  }),
+)
 app.use(express.json())
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }))
@@ -45,4 +56,5 @@ app.get(/^(?!\/api\/).*/, (_req, res) => {
 
 app.listen(PORT, () => {
   console.log(`API listening on http://localhost:${PORT}`)
+  console.log(`CORS origins: ${ALLOWED_ORIGINS.length > 0 ? ALLOWED_ORIGINS.join(', ') : '* (any)'}`)
 })

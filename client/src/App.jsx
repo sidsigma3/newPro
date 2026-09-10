@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { apiUrl } from './api.js'
 import { EMPTY_FORM, FIELDS } from './fields.js'
 
 /** `2026-09-10` from a date input becomes `10 September 2026` on the certificate. */
@@ -41,7 +42,7 @@ export default function App() {
 
   /** Posts the form and returns the PDF blob, or null when the server rejected it. */
   async function requestPdf() {
-    const response = await fetch('/api/certificate', {
+    const response = await fetch(apiUrl('/api/certificate'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(buildPayload(form)),

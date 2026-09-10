@@ -14,6 +14,32 @@ npm run dev
 
 Fill the form, then **Preview** (renders inline in an iframe) or **Download PDF**.
 
+## Environment variables
+
+| File                     | Committed | Used by                     | Purpose                                              |
+| ------------------------ | --------- | --------------------------- | ---------------------------------------------------- |
+| `server/.env.example`    | yes       | —                           | Template. Copy to `server/.env`.                     |
+| `server/.env`            | **no**    | `npm run dev` / `npm start` | Local values. Gitignored.                            |
+| `client/.env.example`    | yes       | —                           | Template.                                            |
+| `client/.env.development`| yes       | `npm run dev` (vite)        | Empty base URL → requests go through the Vite proxy. |
+| `client/.env.production` | yes       | `npm run build`             | The deployed backend URL.                            |
+| `client/.env.local`      | **no**    | vite, any mode              | Your personal overrides. Gitignored.                 |
+
+**Server** — loaded natively via `node --env-file-if-exists=.env`, no `dotenv` dependency. A real
+environment variable always wins over the file, which is how hosts like Vercel inject config.
+
+| Variable          | Default    | Meaning                                                                     |
+| ----------------- | ---------- | --------------------------------------------------------------------------- |
+| `PORT`            | `4000`     | Port the API binds to. The Vite proxy expects 4000.                          |
+| `ALLOWED_ORIGINS` | *(unset)*  | Comma-separated browser origins allowed to call the API. Unset = any origin. |
+
+**Client** — Vite only exposes variables prefixed `VITE_`, and inlines them at build time, so
+changing one means rebuilding.
+
+| Variable             | Default | Meaning                                                                        |
+| -------------------- | ------- | ------------------------------------------------------------------------------ |
+| `VITE_API_BASE_URL`  | `''`    | Backend origin. Empty = same-origin (dev proxy / single-server build). A bare host gets `https://` added. |
+
 ## Production
 
 ```bash
